@@ -64,4 +64,22 @@ class UsersController extends Controller
         
         return view('users.followers', $data);
     }
+    
+    public function favoritings($id)
+    {
+        $user = User::find($id);
+        $favoritings = $user->favoritings()->paginate(10);
+        
+        $data = [
+            'user' => $user,
+            // view では $favoritings という名称で変数を使用したいためこのように記述している
+            'microposts' => $favoritings,
+        ];
+        
+        // userインスタンスのカウントを追加してdataに代入
+        $data += $this->counts($user);
+        
+        // /views/users/favoritings.blade.php に $data を渡す(利用できる状態にする)
+        return view('users.favoritings', $data);
+    }
 }
